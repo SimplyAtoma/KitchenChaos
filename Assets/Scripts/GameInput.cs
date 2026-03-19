@@ -2,26 +2,17 @@ using UnityEngine;
 
 public class GameInput : MonoBehaviour
 {
+    private PlayerInput playerInput;
+    private void Awake()
+    {
+        playerInput = new PlayerInput();
+        playerInput.Player.Enable();
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Vector2 GetMovementVectorNormalized()
     {
-        Vector2 inputVector = new Vector2(0, 0);
-        if (Input.GetKey(KeyCode.W))
-        {
-            inputVector.y += 1;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            inputVector.y -= 1;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            inputVector.x -= 1;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            inputVector.x += 1;
-        }
+        Vector2 inputVector = playerInput.Player.Move.ReadValue<Vector2>();
+        
         inputVector = inputVector.normalized;
         return inputVector;
     }
