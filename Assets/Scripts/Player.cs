@@ -1,8 +1,14 @@
+using System; 
 using UnityEngine;
 using System.Collections;
 
 public class Player : MonoBehaviour
 {
+    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectCounterChanged;
+    public class OnSelectedCounterChangedEventArgs : EventArgs
+    {
+        public ClearCounter selectedCounter;
+    }
     [SerializeField] private float speed = 7.0f;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask counterLayerMask;
@@ -12,7 +18,17 @@ public class Player : MonoBehaviour
 
     // Update is called once per frame
     private bool isWalking = false;
+     private static Player instance;
+    public static Player Instance {get;private set;}
     private Vector3 lastInteractDir;
+    private void Awake()
+    {
+        if(Instance != null)
+        {
+            Debug.Log("More than one Player");
+        }
+        Instance = this;
+    }
     private void Start()
     {
         gameInput.OnInteractAction += GameInput_OnInteractAction;
@@ -54,17 +70,17 @@ public class Player : MonoBehaviour
                 //Has ClearCounter
                 if(clearCounter != selectedCounter)
                 {
-                    selectedCounter = clearCounter;
+                    SetSelectedCounter(clearCounter);
                 }
             }
             else
             {
-                selectedCounter = null;
+                SetSelectedCounter(null);
             }
 
         }else
         {
-            selectedCounter = null;
+            SetSelectedCounter(null);
         }
     }
     private void HandleMovement()
@@ -103,5 +119,15 @@ public class Player : MonoBehaviour
         isWalking = movement != Vector3.zero;
         float rotateSpeed = 10f;
         transform.forward = Vector3.Slerp(transform.forward, movement, Time.deltaTime*rotateSpeed);
+    }
+
+    private void SetSelectedCounter(ClearCounter selectedCounter)
+    {
+        this.selectedCounter = selectedCounter;
+
+        OnSelectCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
+        {
+            selectedCounter = selectedCounter
+        });
     }
 }
