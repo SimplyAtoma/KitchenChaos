@@ -6,12 +6,24 @@ public class Player : MonoBehaviour
     [SerializeField] private float speed = 7.0f;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask counterLayerMask;
+    private ClearCounter selectedCounter;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     // Update is called once per frame
     private bool isWalking = false;
     private Vector3 lastInteractDir;
+    private void Start()
+    {
+        gameInput.OnInteractAction += GameInput_OnInteractAction;
+    }
+    private void GameInput_OnInteractAction(object sender, System.EventArgs e)
+    {
+        if(selectedCounter != null)
+        {
+            selectedCounter.Interact();
+        }
+    }
     void Update()
     { 
         HandleMovement();
@@ -34,17 +46,26 @@ public class Player : MonoBehaviour
             lastInteractDir = movement;
         }
         float interactDistance = 2f;
-        bool canInteract = Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, counterLayerMask);
 
-        if (canInteract)
+        if ( Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, counterLayerMask))
         {
             if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
-                clearCounter.Interact();
+                //Has ClearCounter
+                if(clearCounter != selectedCounter)
+                {
+                    selectedCounter = clearCounter;
+                }
+            }
+            else
+            {
+                selectedCounter = null;
             }
 
+        }else
+        {
+            selectedCounter = null;
         }
-
     }
     private void HandleMovement()
     {
