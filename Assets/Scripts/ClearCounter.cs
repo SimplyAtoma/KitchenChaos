@@ -13,7 +13,26 @@ public class ClearCounter : BaseCounter
     // Start is called once before the first execution of Update after the MonoBehaviour is created
    public override void Interact(Player player)
     {
-        
+        if (!HasKitchenObject())
+        {
+            if (player.HasKitchenObject())
+            {
+                player.GetKitchenObject().SetKitchenObjectParent(this);
+            } else
+            {
+                
+            }
+        }
+        else
+        {
+           if (player.HasKitchenObject())
+            {
+            }
+            else
+            {
+                GetKitchenObject().SetKitchenObjectParent(player);
+            }
+        }
     }
 
 
