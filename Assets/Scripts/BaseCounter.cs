@@ -10,6 +10,10 @@ public class BaseCounter : MonoBehaviour , IKitchenObjectParent
     {
         
     }
+    public virtual void InteractAlternate(Player player)
+    {
+        
+    }
 
     public Transform GetKitchenObjectFollowTransform()
     {
