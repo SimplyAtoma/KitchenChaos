@@ -8,15 +8,36 @@ public class SoundManager : MonoBehaviour
     {
         DeliveryManager.Instance.OnRecipeSuccess += Instance_OnRecipeSuccess;
         DeliveryManager.Instance.OnRecipeFailed += Instance_OnRecipeFailed;
+        CuttingCounter.OnAnyCut += CuttingCounter_OnAnyCut;
+        Player.Instance.OnPickedSomething += Player_OnPickedSomething;
+        BaseCounter.OnAnyObjectPlacedHere += BaseCounter_OnAnyObjectPlacedHere;
+    }
+
+    private void Player_OnPickedSomething(object sender, System.EventArgs e)
+    {
+        PlaySound(audioClipRefsSO.objectPickup, Player.Instance.transform.position);
+    }
+    private void BaseCounter_OnAnyObjectPlacedHere(object sender, System.EventArgs e)
+    {
+        BaseCounter baseCounter = sender as BaseCounter;
+        PlaySound(audioClipRefsSO.objectDrop, baseCounter.transform.position);
+    }
+
+    private void CuttingCounter_OnAnyCut(object sender, System.EventArgs e)
+    {
+        CuttingCounter cuttingCounter = sender as CuttingCounter;
+        PlaySound(audioClipRefsSO.chop, cuttingCounter.transform.position);
     }
 
     private void Instance_OnRecipeFailed(object sender, System.EventArgs e)
     {
-        PlaySound(audioClipRefsSO.deliveryFail);
+        DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
+        PlaySound(audioClipRefsSO.deliveryFail, deliveryCounter.transform.position);
     }
     private void Instance_OnRecipeSuccess(object sender, System.EventArgs e)
     {
-        PlaySound(audioClipRefsSO.deliverySuccess);
+        DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
+        PlaySound(audioClipRefsSO.deliverySuccess, deliveryCounter.transform.position);
     }
 
     private void PlaySound(AudioClip[] audioClipArray, Vector3 position, float volume =1f)
