@@ -14,7 +14,7 @@ public class PlayerSounds : MonoBehaviour
 
     private void Update()
     {
-        footstepTimer -= footstepTimer.deltaTime;
+        footstepTimer -= Time.deltaTime;
         if (footstepTimer < 0f)
         {
             footstepTimer= footstepTimerMax;
