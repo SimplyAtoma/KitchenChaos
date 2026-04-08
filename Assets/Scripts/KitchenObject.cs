@@ -4,34 +4,63 @@ public class KitchenObject : MonoBehaviour
 {
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
-    private ClearCounter clearCounter;
+    private IKitchenObjectParent kitchenObjectParent;
 
     public KitchenObjectSO GetKitchenObjectSO()
     {
         return kitchenObjectSO;
     }
 
-    public void SetClearCounter(ClearCounter clearCounter)
+    public void SetKitchenObjectParent(IKitchenObjectParent kitchenParent)
     {
-        if(this.clearCounter != null)
+        if(this.kitchenObjectParent != null)
         {
-            this.clearCounter.ClearKitchenObject();
+            this.kitchenObjectParent.ClearKitchenObject();
         }
-        this.clearCounter= clearCounter;
+        this.kitchenObjectParent= kitchenParent;
 
-        if (clearCounter.HasKitchenObject())
+        if (kitchenParent.HasKitchenObject())
         {
             Debug.Log("Counter already has a kitchenObject");
         }
-        clearCounter.SetKitchenObject(this);
+        kitchenParent.SetKitchenObject(this);
         
-        transform.parent = clearCounter.GetKitchenObjectFollowTransform();
+        transform.parent = kitchenParent.GetKitchenObjectFollowTransform();
         transform.localPosition = Vector3.zero;
     }
 
-    public ClearCounter GetClearCounter()
+    public IKitchenObjectParent GetKitchenParent()
     {
-        return clearCounter;
+        return kitchenObjectParent;
+    }
+    public void DestorySelf()
+    {
+        kitchenObjectParent.ClearKitchenObject();
+
+        Destroy(gameObject);
+    }
+
+
+    public static KitchenObject SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
+    {
+        Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab);
+        KitchenObject kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
+        kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
+
+        return kitchenObject;
+    }
+
+    public bool TryGetPlate(out PlateKitchenObject plateKitchenObject)
+    {
+        if (this is PlateKitchenObject)
+        {
+            plateKitchenObject = this as PlateKitchenObject;
+            return true;
+        } else
+        {
+            plateKitchenObject = null;
+           return false; 
+        }
     }
 
 }
