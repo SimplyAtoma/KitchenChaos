@@ -12,7 +12,7 @@ public class SoundManager : MonoBehaviour
     {
         Instance = this;
 
-       volume = PlayerPrefs.GetFloat*=(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, 1f);
+       volume = PlayerPrefs.GetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, 1f);
     }
 
     private void Start()
