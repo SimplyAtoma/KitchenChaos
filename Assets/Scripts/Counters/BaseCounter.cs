@@ -5,6 +5,10 @@ public class BaseCounter : MonoBehaviour , IKitchenObjectParent
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public static event EventHandler OnAnyObjectPlacedHere;
+    public static void ResetStaticData()
+    {
+        OnAnyObjectPlacedHere =null;
+    }
     [SerializeField] private Transform counterTopPoint;
 
     private KitchenObject kitchenObject;
